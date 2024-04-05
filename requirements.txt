@@ -1,10 +1,12 @@
-azure_storage==0.37.0
-edge_tts==6.1.10
+azure-cognitiveservices-speech==1.36.0
+edge-tts==6.1.10
 langchain==0.1.14
 langchain_community==0.0.31
 langchain_core==0.1.40
+langchainhub==0.1.15
 langchain_openai==0.1.1
 loguru==0.7.2
+google-api-python-client==2.125.0
 pyaudio==0.2.14
 pydub==0.25.1
 pytz==2024.1

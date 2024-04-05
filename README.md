@@ -69,7 +69,8 @@ docker build -t moss:latest .
 ```
 1. Run the Docker container:
 ```bash
-docker run -itd --device /dev/snd -v ./:/moss --name moss moss:latest
+# docker run -itd --device /dev/snd --name moss moss:latest
+docker run -itd --device /dev/snd --name moss -v /etc/localtime:/etc/localtime:ro -v /etc/timezone:/etc/timezone:ro --restart unless-stopped moss:latest
 ```
 
 ## Basic Usage
