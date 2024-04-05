@@ -62,15 +62,14 @@ python app.py
 
 ### Using Docker
 1. Clone this repository to your local machine.
-2. Copy the config.example.yaml to config.yaml and fill in the required information.
+2. Copy the config.example.yml to config.yml and fill in the required information.
 3. Build the Docker image:
 ```bash
 docker build -t moss:latest .
 ```
-1. Run the Docker container:
+4. Run the Docker container:
 ```bash
-# docker run -itd --device /dev/snd --name moss moss:latest
-docker run -itd --device /dev/snd --name moss -v /etc/localtime:/etc/localtime:ro -v /etc/timezone:/etc/timezone:ro --restart unless-stopped moss:latest
+docker run -itd --device /dev/snd --name moss -v config/config.yml:/moss/config/config.yml -v /etc/localtime:/etc/localtime:ro -v /etc/timezone:/etc/timezone:ro --restart unless-stopped moss:latest
 ```
 
 ## Basic Usage
