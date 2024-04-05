@@ -1,0 +1,4 @@
+__pycache__/
+config/config.example.yaml
+tmp/
+*.log
