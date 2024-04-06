@@ -69,7 +69,16 @@ docker build -t moss:latest .
 ```
 4. Run the Docker container:
 ```bash
-docker run -itd --device /dev/snd --name moss -v config/config.yml:/moss/config/config.yml -v /etc/localtime:/etc/localtime:ro -v /etc/timezone:/etc/timezone:ro --restart unless-stopped moss:latest
+docker run -itd \
+--device /dev/snd \
+--name moss \
+-e PULSE_SERVER=unix:${XDG_RUNTIME_DIR}/pulse/native \
+-v ${XDG_RUNTIME_DIR}/pulse/native:${XDG_RUNTIME_DIR}/pulse/native \
+-v ~/.config/pulse/cookie:/root/.config/pulse/cookie \
+-v ./config/config.yml:/moss/config/config.yml \
+-v /etc/localtime:/etc/localtime:ro \
+--restart unless-stopped \
+moss:latest
 ```
 
 ## Basic Usage
