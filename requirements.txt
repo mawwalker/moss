@@ -9,6 +9,7 @@ loguru==0.7.2
 google-api-python-client==2.125.0
 pyaudio==0.2.14
 pydub==0.25.1
+pyowm==3.3.0
 pytz==2024.1
 PyYAML==6.0.1
 Requests==2.31.0
