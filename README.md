@@ -8,6 +8,8 @@
 
 Moss is an intelligent voice assistant built with modern AI technologies, featuring offline keyword wake-up, real-time speech recognition, intelligent conversation, and speech synthesis. The project uses a modular design and integrates various advanced AI services to provide users with natural and smooth voice interaction experiences.
 
+[![Moss](https://img.youtube.com/vi/usgCC6tQZZg/maxresdefault.jpg)](https://www.youtube.com/watch?v=usgCC6tQZZg)
+
 ## Key Features
 
 🎯 **Offline Keyword Wake-up**

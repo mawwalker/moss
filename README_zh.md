@@ -8,6 +8,8 @@
 
 Moss 是一个基于现代AI技术的智能语音助手，支持离线关键词唤醒、实时语音识别、智能对话和语音合成。项目采用模块化设计，集成了多种先进的AI服务，为用户提供自然流畅的语音交互体验。
 
+[![Moss](https://img.youtube.com/vi/usgCC6tQZZg/maxresdefault.jpg)](https://www.youtube.com/watch?v=usgCC6tQZZg)
+
 ## 核心特性
 
 🎯 **离线关键词唤醒**
