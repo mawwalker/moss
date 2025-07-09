@@ -158,11 +158,12 @@ class ConversationManager:
         try:
             if Path(self.notification_sound).exists():
                 # 异步播放提示音，不等待播放完成，加快响应速度
-                asyncio.create_task(
-                    asyncio.get_event_loop().run_in_executor(
-                        None, play_notification_sound, self.notification_sound
-                    )
+                loop = asyncio.get_running_loop()
+                # 直接启动执行器任务，不等待完成
+                loop.run_in_executor(
+                    None, play_notification_sound, self.notification_sound
                 )
+                
                 logger.info("Notification sound started playing")
                 # 只等待很短时间确保音频开始播放
                 await asyncio.sleep(0.1)
@@ -236,7 +237,8 @@ class ConversationManager:
         """播放错误提示音"""
         try:
             if Path(self.error_sound).exists():
-                await asyncio.get_event_loop().run_in_executor(
+                loop = asyncio.get_running_loop()
+                await loop.run_in_executor(
                     None, play_notification_sound, self.error_sound
                 )
         except Exception as e:

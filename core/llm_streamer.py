@@ -65,10 +65,6 @@ class LLMStreamer:
         """
         messages = [
             {
-                "role": "system",
-                "content": "你是一个有用的AI助手。请用简洁、自然的方式回答用户的问题。"
-            },
-            {
                 "role": "user", 
                 "content": question
             }
@@ -84,18 +80,6 @@ class ConversationLLM:
     def __init__(self, config: dict = None, system_prompt: str = None):
         self.streamer = LLMStreamer(config)
         self.conversation_history = []
-        
-        # 设置系统提示
-        default_system_prompt = "你是一个有用的AI语音助手。请用简洁、自然、口语化的方式回答问题。回答要适合语音播放，避免使用过多的符号和格式。"
-        self.system_prompt = system_prompt or default_system_prompt
-        
-    def add_system_message(self):
-        """添加系统消息"""
-        if not self.conversation_history or self.conversation_history[0]["role"] != "system":
-            self.conversation_history.insert(0, {
-                "role": "system",
-                "content": self.system_prompt
-            })
             
     def add_user_message(self, message: str):
         """添加用户消息"""
@@ -120,8 +104,6 @@ class ConversationLLM:
         Returns:
             TextQueue: 文本队列对象
         """
-        # 确保有系统消息
-        self.add_system_message()
         
         # 添加用户消息
         self.add_user_message(user_question)

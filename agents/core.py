@@ -33,6 +33,7 @@ class MossAgent:
     @staticmethod
     def dynamic_system_prompt(state: AgentState, config: RunnableConfig) -> list[AnyMessage]:
         current_date = config.get("configurable", {}).get("current_date", "")
+        logger.debug(f"Dynamic system prompt with current date: {current_date}")
         system_msg = agent_additional_prompts.format(
             current_date=current_date,
         )
@@ -40,7 +41,7 @@ class MossAgent:
 
     async def run(self, messages: list[AnyMessage], config: RunnableConfig = None) -> AsyncGenerator[Any, Any]:
         """运行Moss智能管家"""
-        # return await self.agent.invoke(messages, config=config)
+        logger.debug(f"config: {config}")
         result = self.agent.stream(
             {"messages": messages},
             stream_mode=["updates", "messages", "custom"],

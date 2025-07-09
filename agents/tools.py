@@ -1,12 +1,15 @@
 from langchain_core.tools import StructuredTool
 from langchain.pydantic_v1 import BaseModel
-from langchain_community.utilities import OpenWeatherMapAPIWrapper
+from langchain_community.utilities import OpenWeatherMapAPIWrapper, DuckDuckGoSearchAPIWrapper
 from loguru import logger
 from config.conf import openweather_api_key
 
 
 class OpenWeatherMapInput(BaseModel):
     location_code: str
+    
+class DuckDuckGoSearchInput(BaseModel):
+    query: str
     
 
 def openweathermap(location_code):
@@ -24,11 +27,27 @@ openweathermap_tool = StructuredTool.from_function(
     args_schema=OpenWeatherMapInput
 )
 
+def duckduckgo_search(query: str) -> str:
+    """Search DuckDuckGo for a query and return the first result."""
+    logger.info(f"Searching DuckDuckGo for query: {query}")
+    search = DuckDuckGoSearchAPIWrapper()
+    results = search.run(query)
+    logger.info(f"DuckDuckGo search results: {results}")
+    return results
+
+duckduckgo_search_tool = StructuredTool.from_function(
+    func=duckduckgo_search,
+    name="duckduckgo_search",
+    description="""This tool searches web content for a query and returns the first 5 results. Input is a search query.""",
+    args_schema=DuckDuckGoSearchInput
+)
+
 
 def init_tools() -> list[StructuredTool]:
     """Initialize and return a list of tools for the agent."""
     tools = [
         openweathermap_tool,
+        duckduckgo_search_tool,
         # Add other tools here as needed
     ]
     return tools
