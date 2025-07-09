@@ -2,3 +2,6 @@ __pycache__/
 config/config.yml
 tmp/
 *.log
+assets
+.venv
+.env

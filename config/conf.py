@@ -1,5 +1,8 @@
 import yaml
+import dotenv
 import os
+
+dotenv.load_dotenv()
 
 with open("config/config.yml", 'r') as stream:
     try:
@@ -11,6 +14,13 @@ ADDITION_SYSTEM_MESSAGE = """You Are A helpful Home Assistant. You can control t
         {device_list}. You can control the devices by using the given tools. You must use the correct parameters when using the tools. Sometimes before you change the value of some device, 
         you should first query the current state of the device to confirm how to change the value. ALWAYS outputs the final result to {language}."""
 
-os.environ["OPENWEATHERMAP_API_KEY"] = config['agent_config']['openweathermap']['api_key']
-os.environ['GOOGLE_API_KEY'] = config['agent_config']['google']['api_key']
-os.environ['GOOGLE_CSE_ID'] = config['agent_config']['google']['cse_id']
+llm_config = {
+    "api_key": os.getenv("LLM_AK", ""),
+    "url": os.getenv("LLM_URL", "https://api.openai.com/v1"),
+    "model": os.getenv("LLM_MODEL", "gpt-3.5-turbo"),
+}
+
+stt_sr = int(os.getenv("TTS_SR", 24000))  # 默认值为24000Hz
+
+
+openweather_api_key = os.getenv("OPENWEATHERMAP_API_KEY", "")

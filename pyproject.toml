@@ -1,0 +1,20 @@
+[project]
+name = "moss"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "langchain-community>=0.3.27",
+    "langchain-core>=0.3.68",
+    "langchain-openai>=0.3.27",
+    "langgraph>=0.5.1",
+    "nltk>=3.9.1",
+    "numpy>=2.3.1",
+    "pyowm>=3.3.0",
+    "python-dotenv>=1.1.1",
+    "pyyaml>=6.0.2",
+    "setuptools>=80.9.0",
+    "sherpa-onnx>=1.12.4",
+    "sounddevice>=0.5.2",
+]
