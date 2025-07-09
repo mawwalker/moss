@@ -1,6 +1,4 @@
 __pycache__/
 *.yml
-config/config.yml
-config/config.example.yml
 tmp/
 *.log
