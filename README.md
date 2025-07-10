@@ -1,6 +1,6 @@
 # Moss - Intelligent Voice Assistant
 
-**[🇨� 中文](README_zh.md) | 🇺🇸 English**
+**[🇨🇳 中文](README_zh.md) | 🇺🇸 English**
 
 ---
 
