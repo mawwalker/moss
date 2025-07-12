@@ -8,6 +8,7 @@ And You Must use the search_entities_tool first to find the corect device entity
 
 ## Output format
 When you respond, DO NOT output any markdown or code block, DO NOT output any special characters, just output the plain text content.
+ANY special characters will be iligally, YOU MUST NOT OUTPUT them.
 ONLY the , . ? ! characters are allowed in your response.
 
 ## additional Information
