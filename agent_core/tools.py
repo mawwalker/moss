@@ -1,8 +1,11 @@
 from langchain_core.tools import StructuredTool
-from langchain.pydantic_v1 import BaseModel
-from langchain_community.utilities import OpenWeatherMapAPIWrapper, DuckDuckGoSearchAPIWrapper
+from pydantic import BaseModel
+from langchain_community.utilities import OpenWeatherMapAPIWrapper
+from langchain_tavily import TavilySearch
+from langchain_mcp_tools import convert_mcp_to_langchain_tools
+from agent_core.hass_mcp import build_hass_tools
 from loguru import logger
-from config.conf import openweather_api_key
+from config.conf import openweather_api_key, hass_config
 
 
 class OpenWeatherMapInput(BaseModel):
@@ -27,30 +30,34 @@ openweathermap_tool = StructuredTool.from_function(
     args_schema=OpenWeatherMapInput
 )
 
-def duckduckgo_search(query: str) -> str:
-    """Search DuckDuckGo for a query and return the first result."""
-    logger.info(f"Searching DuckDuckGo for query: {query}")
-    search = DuckDuckGoSearchAPIWrapper()
-    results = search.run(query)
-    logger.info(f"DuckDuckGo search results: {results}")
-    return results
-
-duckduckgo_search_tool = StructuredTool.from_function(
-    func=duckduckgo_search,
-    name="duckduckgo_search",
-    description="""This tool searches web content for a query and returns the first 5 results. Input is a search query.""",
-    args_schema=DuckDuckGoSearchInput
+tavily_search_tool = TavilySearch(
+    max_result=5,
+    topic="general",
 )
 
 
-def init_tools() -> list[StructuredTool]:
+async def init_tools():
     """Initialize and return a list of tools for the agent."""
     tools = [
         openweathermap_tool,
-        duckduckgo_search_tool,
+        tavily_search_tool,
         # Add other tools here as needed
     ]
-    return tools
+    
+    cleanup_funcs = []
+    
+    if hass_config["enable"]:
+        logger.info("Initializing HASS tools...")
+        try:
+            hass_tools, cleanup = await build_hass_tools()
+            tools.extend(hass_tools)
+            cleanup_funcs.append(cleanup)
+        except Exception as e:
+            logger.error(f"Failed to initialize HASS tools: {e}")
+            # Continue without HASS tools
+    
+    logger.info(f"Initialized tools: {[tool.name for tool in tools]}")
+    return tools, cleanup_funcs
 
 
 if __name__ == "__main__":

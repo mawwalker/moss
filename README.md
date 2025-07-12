@@ -6,7 +6,7 @@
 
 ## Project Overview
 
-Moss is an intelligent voice assistant built with modern AI technologies, featuring offline keyword wake-up, real-time speech recognition, intelligent conversation, and speech synthesis. The project uses a modular design and integrates various advanced AI services to provide users with natural and smooth voice interaction experiences.
+Moss is an intelligent voice assistant built with modern AI technologies, featuring offline keyword wake-up, real-time speech recognition, intelligent conversation, and speech synthesis. The project uses a modular design and integrates various advanced AI services, including Home Assistant MCP module, to provide users with natural and smooth voice interaction experiences.
 
 [![Moss](https://img.youtube.com/vi/usgCC6tQZZg/maxresdefault.jpg)](https://www.youtube.com/watch?v=usgCC6tQZZg)
 
@@ -30,6 +30,12 @@ Moss is an intelligent voice assistant built with modern AI technologies, featur
 - Weather queries, smart home control, etc.
 - Easy to add custom tools
 
+🏠 **Home Assistant Integration**
+- Smart home control based on MCP (Model Context Protocol)
+- Seamless integration with Home Assistant system
+- Device status queries and control
+- Voice control of smart home devices
+
 🎵 **High-quality Speech Synthesis**
 - Advanced TTS technology based on IndexTTS
 - Natural and fluent voice output
@@ -38,31 +44,37 @@ Moss is an intelligent voice assistant built with modern AI technologies, featur
 ## System Architecture
 
 ```
-┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
+┌──────────────────┐    ┌───────────────────┐    ┌─────────────────┐
 │ Keyword Detection│───▶│ Speech Recognition│───▶│  LLM Processing │
-│  (Offline KWS)  │    │  (Realtime STT)  │    │  (Langchain)    │
-└─────────────────┘    └──────────────────┘    └─────────────────┘
+│   (Offline KWS)  │    │  (Realtime STT)   │    │  (Langchain)    │
+└──────────────────┘    └───────────────────┘    └─────────────────┘
                                                          │
-┌─────────────────┐    ┌──────────────────┐             │
-│  Audio Playback │◀───│ Speech Synthesis │◀────────────┘
+┌─────────────────┐    ┌──────────────────┐              │
+│  Audio Playback │◀───│ Speech Synthesis │◀─────────────┘
 │ (Audio Player)  │    │   (IndexTTS)     │
 └─────────────────┘    └──────────────────┘
+                               ┌─────────────────┐
+                               │ Home Assistant  │
+                               │   MCP Module    │
+                               └─────────────────┘
 ```
 
 ## Quick Start
 
 ### Requirements
 
-- Python 3.8+
+- Python 3.12+
 - Linux/macOS/Windows
 - Audio devices (microphone and speakers)
+- Home Assistant (optional, for smart home control)
 
 ### Installation
 
-1. Clone the repository
+1. Clone the repository with submodules
 ```bash
 git clone https://github.com/your-username/Moss.git
 cd Moss
+git submodule update --init --recursive
 ```
 
 2. Install system dependencies (Ubuntu example)
@@ -86,6 +98,20 @@ cp .env.example .env
 
 2. Edit the configuration file with necessary API keys and service addresses
 
+### Home Assistant MCP Module Configuration
+
+1. Configure Home Assistant connection in `.env` file
+```bash
+HASS_ENABLE=1
+HASS_URL=http://your-home-assistant-url:8123
+HASS_TOKEN=your-long-lived-access-token
+```
+
+2. Create a long-lived access token in Home Assistant:
+   - Go to Home Assistant Settings → Users → Security
+   - Create a long-lived access token
+   - Copy the token to your configuration file
+
 ### Running the Application
 
 ```bash
@@ -101,7 +127,7 @@ python app.py --keywords-file assets/keywords_en.txt  # Use English keywords
 
 ## Docker Deployment
 
-Comming soon
+Coming soon
 
 ## Extending Features
 
@@ -133,9 +159,25 @@ def init_tools() -> list[StructuredTool]:
 
 ### Custom Wake Words
 
-1. Prepare keyword file (one keyword per line)
-
 https://k2-fsa.github.io/sherpa/onnx/kws/index.html
+
+### Home Assistant MCP Module
+
+The Home Assistant MCP module provides seamless integration with Home Assistant systems:
+
+**Supported Features:**
+- Device status queries
+- Device on/off control
+- Scene activation
+- Automation triggers
+- Sensor data reading
+
+**Configuration Notes:**
+- Ensure Home Assistant is accessible
+- Configure correct access token
+- Stable network connection required
+
+For detailed configuration and usage instructions, please refer to the [hass-mcp](https://github.com/voska/hass-mcp) repository.
 
 ## Usage Examples
 
@@ -145,9 +187,11 @@ After starting the program, try these voice commands:
   - "Moss, what's the weather like in Beijing today?"
   - "Moss, check weather in Tokyo"
 
-- **Smart Home** (requires configuration of corresponding tools):
+- **Smart Home** (requires Home Assistant configuration):
   - "Moss, turn on the living room light"
   - "Moss, increase the air conditioner temperature"
+  - "Moss, turn off all lights"
+  - "Moss, check the living room temperature"
 
 - **General Conversation**:
   - "Moss, what's today's date?"
@@ -155,10 +199,24 @@ After starting the program, try these voice commands:
 
 ## Configuration
 
+### Submodule Management
+
+The project uses Git submodules to manage Home Assistant MCP components:
+
+```bash
+# Update submodules
+git submodule update --remote
+
+# Add new submodule
+git submodule add https://github.com/example/repo.git path/to/submodule
+```
+
 ## Important Notes
 
 ⚠️ **Important Reminders**
 - This project is still under development and may contain bugs
+- Home Assistant MCP module requires stable network connection
+- Ensure the security of Home Assistant access tokens
 
 ## Contributing
 
@@ -172,6 +230,7 @@ We warmly welcome developers to participate in building this project!
 - 📚 **Documentation**: Improve project documentation
 - 🎨 **UI/UX**: Enhance user experience
 - ⚡ **Performance**: Optimize system efficiency
+- 🏠 **Smart Home Integration**: Extend Home Assistant functionality
 
 ### Submission Guidelines
 
@@ -187,6 +246,7 @@ Before submitting a PR, please ensure:
 - **Speech Recognition**: WebSocket STT ([stt-server](https://github.com/mawwalker/stt-server))
 - **Speech Synthesis**: IndexTTS ([index-tts-vllm](https://github.com/Ksuriuri/index-tts-vllm))
 - **Conversation Engine**: Langchain Agents
+- **Smart Home**: Home Assistant MCP ([hass-mcp](https://github.com/voska/hass-mcp))
 - **Audio Processing**: PyAudio, SoX
 - **Async Framework**: asyncio
 - **Logging**: loguru
@@ -197,6 +257,7 @@ Before submitting a PR, please ensure:
 - **TTS Service**: [index-tts-vllm](https://github.com/Ksuriuri/index-tts-vllm)
 - **Langchain**: [Official Documentation](https://python.langchain.com/)
 - **Sherpa-ONNX**: [Keyword Spotting](https://github.com/k2-fsa/sherpa-onnx)
+- **Home Assistant MCP**: [hass-mcp](https://github.com/voska/hass-mcp)
 
 ## License
 
@@ -208,6 +269,7 @@ Thanks to the following projects for inspiration:
 - [Sherpa-onnx](https://github.com/k2-fsa/sherpa-onnx)
 - [STT Server](https://github.com/mawwalker/stt-server)
 - [Index TTS VLLM](https://github.com/Ksuriuri/index-tts-vllm)
+- [Home Assistant MCP](https://github.com/voska/hass-mcp)
 
 ## Contact Us
 

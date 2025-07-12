@@ -1,0 +1,3 @@
+[submodule "hass-mcp"]
+	path = hass-mcp
+	url = https://github.com/voska/hass-mcp.git

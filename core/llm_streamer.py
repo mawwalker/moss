@@ -6,7 +6,7 @@ from config.conf import llm_config
 from utils.text_queue import TextQueue
 from langchain_core.runnables import RunnableConfig
 from datetime import datetime
-from agents.core import MossAgent
+from agent_core.core import MossAgent
 
 
 class LLMStreamer:
