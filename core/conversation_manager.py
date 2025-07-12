@@ -125,13 +125,13 @@ class ConversationManager:
             
     async def _on_keyword_detected(self, keyword: str):
         """关键词检测回调（异步）"""
-        logger.info(f"🎯 Keyword detected: {keyword}")
+        logger.debug(f"🎯 Keyword detected: {keyword}")
         
         if self.state != ConversationState.WAITING_KEYWORD:
             logger.info(f"Keyword detected but not in waiting state: {keyword} (current state: {self.state})")
             return
             
-        logger.info(f"Processing keyword: {keyword}")
+        logger.debug(f"Processing keyword: {keyword}")
         
         try:
             # 立即切换状态，避免重复触发
@@ -164,7 +164,7 @@ class ConversationManager:
                     None, play_notification_sound, self.notification_sound
                 )
                 
-                logger.info("Notification sound started playing")
+                logger.debug("Notification sound started playing")
                 # 只等待很短时间确保音频开始播放
                 await asyncio.sleep(0.1)
             else:
@@ -182,7 +182,7 @@ class ConversationManager:
             task = asyncio.create_task(self.speech_recognizer.start_recognition())
             self.current_tasks.append(task)
             
-            logger.info("Speech recognition ready, waiting for user input...")
+            logger.debug("Speech recognition ready, waiting for user input...")
             
         except Exception as e:
             logger.error(f"Error starting speech recognition: {e}")
@@ -221,7 +221,7 @@ class ConversationManager:
             # 等待TTS播放完成 - 确保播放完成后才切换状态
             await self.tts_streamer.stream_play_from_queue(text_queue)
             
-            logger.info("Response playback completed successfully")
+            logger.debug("Response playback completed successfully")
             
         except Exception as e:
             logger.error(f"Error processing question: {e}")
@@ -247,7 +247,7 @@ class ConversationManager:
     def _reset_to_waiting(self):
         """重置到等待关键词状态"""
         self.state = ConversationState.WAITING_KEYWORD
-        logger.info("Reset to waiting for keyword...")
+        logger.debug("Reset to waiting for keyword...")
         
     def get_state(self) -> str:
         """获取当前状态"""

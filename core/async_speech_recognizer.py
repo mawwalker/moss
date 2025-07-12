@@ -42,7 +42,7 @@ class AsyncSpeechRecognizer(AsyncAudioConsumer):
         """连接到WebSocket服务器"""
         try:
             self.websocket = await websockets.connect(self.websocket_uri)
-            logger.info(f"Connected to STT service: {self.websocket_uri}")
+            logger.debug(f"Connected to STT service: {self.websocket_uri}")
             return True
         except Exception as e:
             logger.error(f"Failed to connect to STT service: {e}")
@@ -53,7 +53,7 @@ class AsyncSpeechRecognizer(AsyncAudioConsumer):
         if self.websocket:
             await self.websocket.close()
             self.websocket = None
-            logger.info("Disconnected from STT service")
+            logger.debug("Disconnected from STT service")
             
     async def start_recognition(self) -> bool:
         """开始语音识别"""
@@ -79,7 +79,7 @@ class AsyncSpeechRecognizer(AsyncAudioConsumer):
             # 开始消费音频数据
             await self.start_consuming()
             
-            logger.info("Speech recognition started, waiting for results...")
+            logger.debug("Speech recognition started, waiting for results...")
             
             # 等待接收任务完成（通常在停止识别时）
             await receiving_task
@@ -188,7 +188,7 @@ class AsyncSpeechRecognizer(AsyncAudioConsumer):
                     # 超时没有消息，继续循环
                     continue
                 except websockets.exceptions.ConnectionClosed:
-                    logger.info("WebSocket connection closed")
+                    logger.debug("WebSocket connection closed")
                     break
                 except Exception as e:
                     logger.error(f"Error receiving recognition result: {e}")
@@ -261,7 +261,7 @@ class QuestionCollector:
             self.silence_task.cancel()
             self.silence_task = None
             
-        logger.info("Question collector reset")
+        logger.debug("Question collector reset")
         
     def on_stt_result(self, text: str, is_final: bool):
         """处理STT结果"""
@@ -275,7 +275,7 @@ class QuestionCollector:
         
         if not self.is_collecting:
             self.is_collecting = True
-            logger.info("Started collecting question...")
+            logger.debug("Started collecting question...")
             
         # 如果是最终结果且长度足够，立即触发回调
         if is_final and len(self.current_question) >= self.min_question_length:

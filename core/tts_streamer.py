@@ -62,7 +62,7 @@ class TTSStreamer:
             text_queue: 文本队列对象
         """
         self.is_playing = True
-        logger.info("Starting TTS streaming playback...")
+        logger.debug("Starting TTS streaming playback...")
         
         # 启动音频播放
         await self.audio_player.start_playback()
@@ -78,7 +78,7 @@ class TTSStreamer:
                 if sentence is None:
                     # 检查是否已经结束
                     if text_queue.is_finished:
-                        logger.info(f"All sentences processed. Total: {total_sentences}")
+                        logger.debug(f"All sentences processed. Total: {total_sentences}")
                         self.is_playing = False
                         break
                     continue
@@ -87,7 +87,7 @@ class TTSStreamer:
                     continue
                 
                 total_sentences += 1
-                logger.info(f"Processing sentence {total_sentences} for TTS: {sentence}")
+                logger.debug(f"Processing sentence {total_sentences} for TTS: {sentence}")
                 
                 # 合成音频
                 audio_data = await self.synthesize_text(sentence)
@@ -95,7 +95,7 @@ class TTSStreamer:
                     # 添加到播放队列
                     await self.audio_player.add_audio_data(audio_data)
                     sentences_played += 1
-                    logger.info(f"Successfully queued sentence {sentences_played}: {sentence[:30]}...")
+                    logger.debug(f"Successfully queued sentence {sentences_played}: {sentence[:30]}...")
                 else:
                     logger.warning(f"Failed to synthesize sentence {total_sentences}: {sentence}")
                     
@@ -103,7 +103,7 @@ class TTSStreamer:
             if sentences_played > 0:
                 # 添加结束标记，告知音频播放器所有数据已添加完毕
                 await self.audio_player.add_audio_data(b'')  # 空数据作为结束标记
-                logger.info("Waiting for audio playback to complete...")
+                logger.debug("Waiting for audio playback to complete...")
                 await self.audio_player.wait_until_finished()
             else:
                 logger.info("No sentences were successfully processed for TTS")

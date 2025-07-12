@@ -66,7 +66,7 @@ class RealTimeVoiceChat:
         """运行主程序"""
         logger.info("Starting Real-Time Voice Chat...")
         logger.info("说明：程序将持续监听关键词，检测到关键词后会播放提示音并开始语音识别")
-        logger.info("按 Ctrl+C 退出程序")
+        logger.info("按 Ctrl+4 退出程序")
         
         self.is_running = True
         

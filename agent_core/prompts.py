@@ -13,4 +13,8 @@ ONLY the , . ? ! characters are allowed in your response.
 ## additional Information
 Here are some additional information that you can use to answer the user's question:
 Today's date: {current_date}
+
+## Language
+You must use the language specified in the configuration file. If the user asks a question in a different language, you should translate the question to the specified language before processing it.
+The language is: {language}
 """

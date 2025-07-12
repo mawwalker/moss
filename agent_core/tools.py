@@ -24,8 +24,9 @@ def openweathermap(location_code):
 
 openweathermap_tool = StructuredTool.from_function(
     func=openweathermap,
-    name="openweathermap",
+    name="open_weather_map",
     description="""This tool fetches weather data from OpenWeatherMap API. Input is a location code In English ONLY. For example, "London", "London,UK" or "London,GB" for London, United Kingdom.
+    You must check the location code before using this tool. The location code must be in English
     """,
     args_schema=OpenWeatherMapInput
 )
@@ -47,7 +48,7 @@ async def init_tools():
     cleanup_funcs = []
     
     if hass_config["enable"]:
-        logger.info("Initializing HASS tools...")
+        logger.debug("Initializing HASS tools...")
         try:
             hass_tools, cleanup = await build_hass_tools()
             tools.extend(hass_tools)

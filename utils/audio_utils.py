@@ -66,7 +66,7 @@ class StreamingAudioPlayer:
         self.is_playing = True
         self.should_stop = False
         self.play_task = asyncio.create_task(self._playback_loop())
-        logger.info("Started streaming audio playback")
+        logger.debug("Started streaming audio playback")
     
     def play_audio_file(self, file_path: str) -> bool:
         """播放音频文件"""
@@ -74,7 +74,7 @@ class StreamingAudioPlayer:
             pygame.mixer.init()
             self.is_playing = True
             
-            logger.info(f"Playing audio: {file_path}")
+            logger.debug(f"Playing audio: {file_path}")
             pygame.mixer.music.load(file_path)
             pygame.mixer.music.play()
             
@@ -137,7 +137,7 @@ class StreamingAudioPlayer:
                     
                     # 检查结束标记
                     if audio_data is None:
-                        logger.info("Received end marker, stopping playback loop")
+                        logger.debug("Received end marker, stopping playback loop")
                         break
                         
                     # 播放音频数据
@@ -155,7 +155,7 @@ class StreamingAudioPlayer:
             logger.error(f"Playback loop error: {e}")
         finally:
             self.is_playing = False
-            logger.info("Playback loop ended")
+            logger.debug("Playback loop ended")
     
     async def _play_audio_array(self, audio_data: np.ndarray):
         """播放音频数组"""
@@ -205,7 +205,7 @@ class StreamingAudioPlayer:
             except Exception as e:
                 logger.error(f"Error waiting for play task: {e}")
         
-        logger.info("Audio playback finished")
+        logger.debug("Audio playback finished")
 
 
 class AudioRecorder:
@@ -226,10 +226,10 @@ class AudioRecorder:
             logger.error("No input devices found!")
             return None
             
-        logger.info("Available input devices:")
+        logger.debug("Available input devices:")
         for i in input_devices:
             dev = devices[i]
-            logger.info(f"  {i}: {dev['name']} (channels: {dev['max_input_channels']}, rate: {dev['default_samplerate']})")
+            logger.debug(f"  {i}: {dev['name']} (channels: {dev['max_input_channels']}, rate: {dev['default_samplerate']})")
         
         # 尝试找到支持目标采样率的设备
         for device_id in input_devices:
@@ -240,7 +240,7 @@ class AudioRecorder:
                     dtype='float32', 
                     samplerate=self.sample_rate
                 )
-                logger.info(f"Selected device {device_id}: {devices[device_id]['name']}")
+                logger.debug(f"Selected device {device_id}: {devices[device_id]['name']}")
                 return device_id
             except:
                 continue

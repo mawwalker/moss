@@ -64,9 +64,11 @@ class MossAgent:
     @staticmethod
     def dynamic_system_prompt(state: AgentState, config: RunnableConfig) -> list[AnyMessage]:
         current_date = config.get("configurable", {}).get("current_date", "")
+        language = config.get("configurable", {}).get("language", "zh")
         logger.debug(f"Dynamic system prompt with current date: {current_date}")
         system_msg = agent_additional_prompts.format(
             current_date=current_date,
+            language=language
         )
         return [{"role": "system", "content": system_msg}] + state["messages"]
 
@@ -82,9 +84,8 @@ class MossAgent:
         )
 
         async for stream_mode, chunk in result:
-            print(chunk)
+            logger.debug(f"Received chunk in stream mode '{stream_mode}': {chunk}")
             if stream_mode == "messages":
-                # import ipdb; ipdb.set_trace()
                 content = chunk[0].content
                 if content and isinstance(chunk[0], AIMessage):
                     logger.debug(f"{content}")
@@ -108,8 +109,12 @@ if __name__ == "__main__":
     ]
     
     async def main():
+        configurable = {
+                "current_date": datetime.now().strftime("%Y-%m-%d"),
+                "language": "Chinese, Mandarin"
+            }
         async with MossAgent() as agent:
-            async for chunk in agent.run(messages, config=RunnableConfig(configurable={"current_date": "2025-07-10"})):
+            async for chunk in agent.run(messages, config=RunnableConfig(configurable=configurable)):
                 print(chunk)
     
     asyncio.run(main())

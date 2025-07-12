@@ -2,7 +2,7 @@ import asyncio
 from openai import AsyncOpenAI
 from typing import Callable, List, Dict, Any
 from loguru import logger
-from config.conf import llm_config
+from config.conf import llm_config, language
 from utils.text_queue import TextQueue
 from langchain_core.runnables import RunnableConfig
 from datetime import datetime
@@ -38,8 +38,12 @@ class LLMStreamer:
         self.text_queue.reset()
         
         try:
-            logger.info("Starting LLM streaming...")
-            stream = self.agent.run(messages, config=RunnableConfig(configurable={"current_date": datetime.now().strftime("%Y-%m-%d")}))
+            logger.debug("Starting LLM streaming...")
+            configurable = {
+                "current_date": datetime.now().strftime("%Y-%m-%d"),
+                "language": language
+            }
+            stream = self.agent.run(messages, config=RunnableConfig(configurable=configurable))
             async for chunk in stream:
                 await self.text_queue.put_chunk(chunk)
                 
@@ -127,7 +131,7 @@ class ConversationLLM:
                 
         if full_response.strip():
             self.add_assistant_message(full_response.strip())
-            logger.info(f"Added assistant response to history: {full_response[:100]}...")
+            logger.debug(f"Added assistant response to history: {full_response[:100]}...")
             
     def clear_history(self):
         """清空对话历史"""

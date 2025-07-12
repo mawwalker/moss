@@ -28,7 +28,7 @@ class AudioManager:
         self._loop = None
         self._stream_thread = None
         
-        logger.info(f"Audio manager initialized (sample_rate={sample_rate}, chunk_size={chunk_size}s)")
+        logger.debug(f"Audio manager initialized (sample_rate={sample_rate}, chunk_size={chunk_size}s)")
         
     def add_consumer(self, consumer: Callable[[np.ndarray], None]) -> int:
         """添加音频数据消费者
@@ -42,7 +42,7 @@ class AudioManager:
         with self._consumer_lock:
             consumer_id = len(self.consumers)
             self.consumers.append(consumer)
-            logger.info(f"Added audio consumer {consumer_id}, total consumers: {len(self.consumers)}")
+            logger.debug(f"Added audio consumer {consumer_id}, total consumers: {len(self.consumers)}")
             return consumer_id
             
     def remove_consumer(self, consumer_id: int):
@@ -54,7 +54,7 @@ class AudioManager:
         with self._consumer_lock:
             if 0 <= consumer_id < len(self.consumers):
                 self.consumers[consumer_id] = None  # 标记为已移除
-                logger.info(f"Removed audio consumer {consumer_id}")
+                logger.debug(f"Removed audio consumer {consumer_id}")
             else:
                 logger.warning(f"Invalid consumer ID: {consumer_id}")
                 
@@ -198,7 +198,7 @@ class AsyncAudioConsumer:
         # 启动处理任务
         self.processing_task = asyncio.create_task(self._process_audio())
         
-        logger.info(f"Started async audio consumer {self.consumer_id}")
+        logger.debug(f"Started async audio consumer {self.consumer_id}")
         
     async def stop_consuming(self):
         """停止消费音频数据"""
@@ -227,7 +227,7 @@ class AsyncAudioConsumer:
                     break
             self.audio_queue = None
             
-        logger.info("Stopped async audio consumer")
+        logger.debug("Stopped async audio consumer")
         
     def _on_audio_data(self, audio_data: np.ndarray):
         """音频数据回调（在音频线程中调用）"""
